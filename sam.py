@@ -33,22 +33,20 @@ time2="" #グローバル変数じゃないほうがいいかも
 
 def get_picture():
     time=datetime.datetime.now()
-    time2=str(time.year)+"-"+str(time.month)+"-"+str(time.day)+" "+str(time.hour)+":"+str(time.minute)+":"+str(time.second)+".jpg"
-    cheese=['fswebcam','-p','MJPEG','-r','1280x720','--no-banner','-D','1',time2]
+    time2=str(time.year)+"-"+str(time.month)+"-"+str(time.day)+" "+str(time.hour)+":"+str(time.minute)+":"+str(time.second)+".jpeg" #LINE APIがjpegがpng指定のため
+    cheese=['fswebcam','-p','MJPEG','-r','1280x720','--no-banner','-D','1',time2] #サイズも調整必要かな
     try:
         subprocess.check_call(cheese)
         shutil.move(time2,UPLOAD_FOLDER)
         print ("Command finished.")
-        
-
     except:
         return "Command envailed."
 
 
-#herokuへのデプロイが成功したかどうかを確認する
+#生存確認
 @app.route("/")
 def hello_world():
-    return "hello world!"
+    return "Now we are under....."
 
 
 #LINE DevelopersのWebhookにURLを指定してWebhookからURLにイベントが送られる
