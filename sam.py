@@ -8,9 +8,10 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage,
+    MessageEvent, TextMessage, TextSendMessage,ImageMessage,ImageSendMessage
 )
 from pathlib import Path
+from linebot.models.send_messages import ImageSendMessage
 from werkzeug.utils import secure_filename
 import os
 import ssl
@@ -33,12 +34,12 @@ time2="" #グローバル変数じゃないほうがいいかも
 
 def get_picture():
     time=datetime.datetime.now()
-    time2=str(time.year)+"-"+str(time.month)+"-"+str(time.day)+" "+str(time.hour)+":"+str(time.minute)+":"+str(time.second)+".jpeg" #LINE APIがjpegがpng指定のため
-    cheese=['fswebcam','-p','MJPEG','-r','1280x720','--no-banner','-D','1',time2] #サイズも調整必要かな
+    time2=str(time.year)+str(time.month)+str(time.day)+str(time.hour)+str(time.minute)+str(time.second)+".jpeg" #LINE APIがjpegがpng指定のため
+    cheese=['fswebcam','-p','MJPEG','--no-banner',time2] #サイズも調整必要かな
     try:
         subprocess.check_call(cheese)
         shutil.move(time2,UPLOAD_FOLDER)
-        print ("Command finished.")
+        return time2
     except:
         return "Command envailed."
 
@@ -62,7 +63,6 @@ def callback():
     # 署名を検証し、問題なければhandleに定義されている関数
     try:
         handler.handle(body, signature)
-        get_picture()
     except InvalidSignatureError:
         abort(400)
     return 'OK'
@@ -71,9 +71,13 @@ def callback():
 #以下でWebhookから送られてきたイベントをどのように処理する
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    a=get_picture() 
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=event.message.text))
+        ImageSendMessage(
+            original_content_url='https://cercil.dev:4567/public/images/'+str(a),
+            preview_image_url='https://cercil.dev:4567/public/images/'+str(a)
+        ))
 
 
 
@@ -81,5 +85,5 @@ def handle_message(event):
 if __name__ == "__main__":
     # context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
     context = ('fullchain.pem', 'privkey.pem') #渡す形式はpemファイルだよ
-    port = 4567 #int(os.getenv("PORT"))
+    port = 4567 
     app.run(host="0.0.0.0", port=port,ssl_context=context,threaded=True,debug=True)
