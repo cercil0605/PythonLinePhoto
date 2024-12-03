@@ -25,8 +25,8 @@ app = Flask(__name__,static_folder="public") #appにわたす
 app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER #uploadフォルダ定義
 
 #get set token
-YOUR_CHANNEL_ACCESS_TOKEN = "TNRYWQMMkF26vnoKeYj3RqV4/4zsW7Nq4OcLVpfifMlRKoOWn7v0t6dX7st04oO3bcvS0GGEI7l3wCptMJ+osm/G5YR1jNssjASFYU+90bltrZdoGmm6niiAjbMdn0IfguUkM4eHt9EQeT7E8xCYYgdB04t89/1O/w1cDnyilFU="
-YOUR_CHANNEL_SECRET = "b393f2e01e79bd59b4459c03673deba3"
+YOUR_CHANNEL_ACCESS_TOKEN = "*************"
+YOUR_CHANNEL_SECRET = "*************"
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 
@@ -75,8 +75,8 @@ def handle_message(event):
     line_bot_api.reply_message(
         event.reply_token,
         ImageSendMessage(
-            original_content_url='https://cercil.dev:4567/public/images/'+str(a),
-            preview_image_url='https://cercil.dev:4567/public/images/'+str(a)
+            original_content_url='https://（ドメイン）/public/images/'+str(a),
+            preview_image_url='https://（ドメイン）/public/images/'+str(a)
         ))
 
 
